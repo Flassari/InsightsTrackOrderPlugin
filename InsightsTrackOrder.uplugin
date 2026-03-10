@@ -1,0 +1,28 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "Insights Track Order",
+	"Description": "Allows customizing the order of tracks/lanes in Unreal Insights Timing View via config.",
+	"Category": "Performance",
+	"CreatedBy": "Ari Arnbjörnsson",
+	"CreatedByURL": "https://ari.games",
+	"DocsURL": "https://github.com/Flassari/InsightsTrackOrderPlugin",
+	"MarketplaceURL": "",
+	"SupportURL": "https://github.com/Flassari/InsightsTrackOrderPlugin",
+	"CanContainContent": false,
+	"IsBetaVersion": false,
+	"EnabledByDefault": true,
+	"Installed": false,
+	"SupportedPrograms": [ "UnrealInsights" ],
+	"Modules": [
+		{
+			"Name": "InsightsTrackOrder",
+			"Type": "EditorAndProgram",
+			"LoadingPhase": "Default",
+			"ProgramAllowList": [
+				"UnrealInsights"
+			]
+		}
+	]
+}
