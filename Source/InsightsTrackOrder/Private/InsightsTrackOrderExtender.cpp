@@ -123,7 +123,7 @@ void FInsightsTrackOrderExtender::Tick(const UE::Insights::Timing::FTimingViewEx
 	{
 		const int32 NewOrder = BaseOrder + i * Spacing;
 		FTrackEntry& ScrollableTrack = AllScrollableTracks[i];
-		if (ScrollableTrack.Track->GetOrder() != NewOrder)
+		if (ScrollableTrack.OriginalOrder >= BaseOrder && ScrollableTrack.Track->GetOrder() != NewOrder)
 		{
 			ScrollableTrack.Track->SetOrder(NewOrder);
 			bAnyChanged = true;
