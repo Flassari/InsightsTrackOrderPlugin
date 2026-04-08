@@ -1,6 +1,7 @@
 #include "InsightsTrackOrderExtender.h"
 
 #include "Insights/ITimingViewSession.h"
+#include "Insights/IUnrealInsightsModule.h"
 #include "Insights/ViewModels/BaseTimingTrack.h"
 #include "Misc/ConfigCacheIni.h"
 #include "Misc/Paths.h"
@@ -15,8 +16,6 @@ FInsightsTrackOrderExtender::FInsightsTrackOrderExtender()
 void FInsightsTrackOrderExtender::LoadConfig()
 {
 	// Load from the plugin's Config/InsightsTrackOrder.ini file.
-
-
 	const FString IniConfigPath = FPaths::Combine(
 		FPaths::EnginePluginsDir(),
 		TEXT("InsightsTrackOrder/Config/InsightsTrackOrder.ini")
@@ -37,12 +36,20 @@ void FInsightsTrackOrderExtender::LoadConfig()
 
 void FInsightsTrackOrderExtender::OnBeginSession(UE::Insights::Timing::ITimingViewSession& InSession)
 {
+	if (InSession.GetName() != FInsightsManagerTabs::TimingProfilerTabId)
+	{
+		return;
+	}
 	Session = &InSession;
 	bForceRescan = true;
 }
 
 void FInsightsTrackOrderExtender::OnEndSession(UE::Insights::Timing::ITimingViewSession& InSession)
 {
+	if (InSession.GetName() != FInsightsManagerTabs::TimingProfilerTabId)
+	{
+		return;
+	}
 	Session = nullptr;
 }
 
@@ -77,15 +84,14 @@ void FInsightsTrackOrderExtender::Tick(const UE::Insights::Timing::FTimingViewEx
 		}
 	});
 
-	// Match tracks to priority patterns.
-	// A track matches pattern[i] if its name contains the pattern string.
-	// If a track matches multiple patterns, the earliest (lowest index) wins.
+	// Match tracks to priority track names exactly.
+	// If a track matches multiple priority names, the earliest (lowest index) wins.
 	for (FTrackEntry& ScrollableTrack : AllScrollableTracks)
 	{
 		const FString& TrackName = ScrollableTrack.Track->GetName();
 		for (int32 i = 0; i < PriorityTrackNames.Num(); i++)
 		{
-			if (TrackName.Contains(PriorityTrackNames[i]))
+			if (TrackName.Equals(PriorityTrackNames[i]))
 			{
 				if (ScrollableTrack.PrioritizedIndex < 0 || i < ScrollableTrack.PrioritizedIndex)
 				{

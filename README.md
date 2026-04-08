@@ -15,7 +15,6 @@ After sorting:
 ## Features
 
 - **Configurable Track Ordering**: Specify which tracks should appear first (top-most) in the Timing View
-- **Substring Matching**: Flexible pattern matching - "GPU" matches "GPU", "GPU2", "GPU Queue 0", etc.
 - **Dynamic Track Detection**: Automatically handles tracks that are added after the profiling session starts (e.g., worker threads spawned during execution)
 - **Preserves Default Order**: Non-prioritized tracks appear below priority tracks in their original order
 
@@ -33,29 +32,28 @@ Add tracks to the `[InsightsTrackOrder]` section using the `+PriorityTracks` arr
 ```ini
 [InsightsTrackOrder]
 +PriorityTracks=GameThread
-+PriorityTracks=RenderThread
++PriorityTracks=RenderThread 0
 +PriorityTracks=RHIThread
 +PriorityTracks=RHISubmissionThread
 +PriorityTracks=GPU
++PriorityTracks=GPU0-Graphics0
++PriorityTracks=GPU0-Copy0
++PriorityTracks=GPU0-Compute0
++PriorityTracks=RHIInterruptThread
 ```
 
 Tracks will appear in the Timing View in the order listed, with prioritized tracks at the top.
 
-### Pattern Matching
+### Track Name Matching
 
-Track names are matched using substring comparison:
-- `"GameThread"` matches "GameThread"
-- `"GPU"` matches "GPU", "GPU2", "GPU Queue 0", "GPU Queue 1", etc.
-- `"Worker"` would match "WorkerThread0", "WorkerThread1", etc.
-
-If a track matches multiple patterns, the earliest pattern in the list takes precedence.
+Track names are matched using exact matches. A nice future feature would be to use regex strings, but I didn't need it 🤷‍♂️
 
 ## How It Works
 
 The plugin registers as a Timing View Extender and:
 1. Loads the priority track list from the configuration file on startup
 2. Periodically scans all scrollable tracks in the Timing View (~once per second)
-3. Matches track names against the configured patterns
+3. Matches track names against the configured priority names
 4. Reorders tracks so priority tracks appear first, followed by all other tracks
 5. Maintains the relative order within each group (prioritized and non-prioritized)
 

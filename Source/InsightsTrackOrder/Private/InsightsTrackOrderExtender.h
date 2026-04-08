@@ -9,17 +9,19 @@
  * so that configured priority tracks appear first (top-most) in the
  * Timing View, in the order they are listed.
  *
- * Tracks are matched by substring against their display name, so
- * "GameThread" will match a track named "GameThread",
- * "GPU" will match "GPU", "GPU2", "GPU Queue 0", etc.
+ * Tracks are matched exactly against their display name.
  * 
  * Example config file:
  *   [InsightsTrackOrder]
  *   +PriorityTracks=GameThread
- *   +PriorityTracks=RenderThread
+ *   +PriorityTracks=RenderThread 0
  *   +PriorityTracks=RHIThread
  *   +PriorityTracks=RHISubmissionThread
  *   +PriorityTracks=GPU
+ *   +PriorityTracks=GPU0-Graphics0
+ *   +PriorityTracks=GPU0-Copy0
+ *   +PriorityTracks=GPU0-Compute0
+ *   +PriorityTracks=RHIInterruptThread
  */
 class FInsightsTrackOrderExtender : public UE::Insights::Timing::ITimingViewExtender
 {
